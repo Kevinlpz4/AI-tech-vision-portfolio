@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  BLOCK AI — Portfolio & Blog sobre IA y Desarrollo
+  ============================================================
+  Versión:    1.0.0
+  Tecnología: HTML5 semántico · CSS3 · JavaScript Vanilla
+  Deploy:     Vercel (estático)
+  Autor:      Kevin Dev
+  Inspirado en: Vercel, Linear, OpenAI, Stripe
+
+  PROPÓSITO:
+  Portfolio profesional que analiza el impacto real de la
+  inteligencia artificial en el desarrollo de software y la
+  sociedad. Combina investigación basada en datos con una
+  experiencia visual premium tipo SaaS.
+
+  ARQUITECTURA:
+  - 13 secciones modulares identificadas con IDs únicos
+  - Scroll spy para navegación activa (via Intersection Observer)
+  - Atributos data-reveal para animaciones lazy en scroll
+  - ARIA roles para accesibilidad
+  ============================================================
+-->
+<html lang="es" data-theme="dark">
+<head>
+  <!--
+    ============================================================
+    META & CONFIGURACIÓN BASE
+    ============================================================
+    - data-theme="dark" establece modo oscuro por defecto en CSS
+    - viewport con initial-scale=1 garantiza responsive en mobile
+    - SEO: description, keywords, Open Graph para previews sociales
+    ============================================================
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kevin Dev | Futuro Ingeniero IA · Backend · Visión Tecnológica</title>
+
+  <!-- SEO & Meta -->
+  <meta name="description" content="Portfolio y análisis sobre inteligencia artificial, desarrollo de software y visión tecnológica moderna. Datos, investigación y perspectiva crítica.">
+  <meta name="keywords" content="IA, inteligencia artificial, desarrollo, backend, programación, tecnología, futuro">
+  <meta name="author" content="Kevin Dev">
+  <meta property="og:title" content="Kevin Dev | IA & Desarrollo">
+  <meta property="og:description" content="Análisis tecnológico serio sobre IA, productividad real y el futuro del desarrollo.">
+  <meta property="og:type" content="website">
+
+  <!--
+    Fonts: Carga diferida vía preconnect para optimizar LCP
+    - Inter: tipografía principal (300-900 weights)
+    - JetBrains Mono: tipografía monoespaciada para código y terminal
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Styles: Hoja de estilo principal con design tokens -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!--
+    ============================================================
+    GLOBAL UI: Cursor Glow + Particles
+    ============================================================
+    Elementos visuales que operan en toda la página:
+    - cursor-glow: Sombra sutil que sigue al mouse (JS driven)
+    - particlesCanvas: Sistema de partículas animadas (Canvas API)
+    Ambos con aria-hidden por ser puramente decorativos.
+    ============================================================
+  -->
+
+  <!--
+    CURSOR GLOW: Orbita difusa que sigue al cursor.
+    Crea la sensación de iluminación ambiental tipo producto premium.
+    Z-index bajo para no interferir con contenido interactivo.
+  -->
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <!--
+    PARTICLES CANVAS: Sistema de partículas con conexiones.
+    Renderizado en canvas para rendimiento óptimo.
+    No interfiere con clicks gracias a pointer-events: none.
+  -->
+  <canvas id="particlesCanvas" aria-hidden="true"></canvas>
+
+  <!--
+    ============================================================
+    1. NAVEGACIÓN PRINCIPAL (Sticky Header)
+    ============================================================
+    - Fixed position con glassmorphism al hacer scroll
+    - Logo con icono ◆ y acento primary
+    - Menú horizontal desktop, hamburger mobile
+    - ARIA: role menubar/menuitem para screen readers
+    - Nav-link.active se actualiza via Intersection Observer (scroll spy)
+    ============================================================
+  -->
+  <header class="header" id="header">
+    <nav class="nav container" role="navigation" aria-label="Navegación principal">
+      <a href="#" class="logo" aria-label="Ir al inicio">
+        <span class="logo-icon">◆</span>
+        <span class="logo-text">Kevin<span class="logo-accent">Dev</span></span>
+      </a>
+
+      <!--
+        Hamburguer toggle: Solo visible en mobile (<768px).
+        Tres líneas que se transforman en X cuando está activo.
+        aria-expanded refleja estado open/closed.
+      -->
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span class="nav-toggle-line"></span>
+        <span class="nav-toggle-line"></span>
+        <span class="nav-toggle-line"></span>
+      </button>
+
+      <!--
+        Nav links: En mobile, slide-in desde la derecha.
+        El scroll spy añade/remueve .active según la sección visible.
+      -->
+      <ul class="nav-links" id="navLinks" role="menubar">
+        <li role="none"><a href="#inicio" role="menuitem" class="nav-link active">Inicio</a></li>
+        <li role="none"><a href="#sobre-mi" role="menuitem" class="nav-link">Sobre mí</a></li>
+        <li role="none"><a href="#ia-datos" role="menuitem" class="nav-link">IA en datos</a></li>
+        <li role="none"><a href="#productividad" role="menuitem" class="nav-link">Productividad</a></li>
+        <li role="none"><a href="#mitos" role="menuitem" class="nav-link">Mitos</a></li>
+        <li role="none"><a href="#terminal" role="menuitem" class="nav-link">Terminal</a></li>
+        <li role="none"><a href="#timeline" role="menuitem" class="nav-link">Evolución</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ====== MAIN CONTENT ====== -->
+  <main>
+
+    <!--
+      ============================================================
+      2. HERO SECTION
+      ============================================================
+      OBJETIVO UX: Impacto visual inmediato que comunica:
+      - Quién soy (futuro IA engineer)
+      - Qué hago (backend con visión)
+      - Por qué importa (datos reales, no hype)
+
+      ELEMENTOS:
+      - Gradiente radial + grid técnico de fondo
+      - Badge animado con dot pulsante
+      - Headline con gradient text en "futuro inteligente"
+      - Typing effect con frases rotativas (JS)
+      - Stats preview con datos impactantes (700M+, 76%, 65%)
+      - Scroll indicator para guiar al usuario
+      ============================================================
+    -->
+    <section id="inicio" class="section hero-section" aria-label="Inicio">
+      <!-- Background layers: gradiente y grid tecnológico -->
+      <div class="hero-gradient-bg" aria-hidden="true"></div>
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+
+      <div class="container hero-content">
+        <!-- Badge con dot animado indicando "activo en el campo" -->
+        <div class="hero-badge" data-reveal="fade-up">
+          <span class="hero-badge-dot"></span>
+          Futuro Ingeniero en IA
+        </div>
+
+        <!--
+          Headline principal:
+          - Responsive via clamp() (36px → 72px)
+          - tracking negativo para impacto visual
+          - gradient-text en la frase clave
+        -->
+        <h1 class="hero-title" data-reveal="fade-up">
+          Construyendo el
+          <span class="gradient-text">futuro inteligente</span>
+          <br>del software
+        </h1>
+
+        <!--
+          Typing effect: Rotación infinita de frases
+          El span #typingEffect es manipulado por JS
+          El cursor | parpadea vía CSS @keyframes blink
+        -->
+        <div class="hero-typing-wrapper" data-reveal="fade-up">
+          <span class="hero-typing-label">//</span>
+          <span class="hero-typing" id="typingEffect" aria-label="Texto dinámico sobre tecnología"></span>
+          <span class="hero-typing-cursor" aria-hidden="true">|</span>
+        </div>
+
+        <p class="hero-description" data-reveal="fade-up">
+          Backend developer en evolución hacia inteligencia artificial.
+          Analizo la industria con datos, no con hype. Visión crítica,
+          desarrollo real, tecnología que importa.
+        </p>
+
+        <!-- CTAs: Primary (Explorar) y Ghost (Ver datos) -->
+        <div class="hero-actions" data-reveal="fade-up">
+          <a href="#sobre-mi" class="btn btn-primary">
+            Explorar
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#ia-datos" class="btn btn-ghost">
+            Ver datos
+          </a>
+        </div>
+
+        <!--
+          Stats preview: Datos impactantes con counters animados.
+          data-count define el número objetivo para la animación JS.
+          mobile: se apilan verticalmente con divisores horizontales.
+        -->
+        <div class="hero-stats" data-reveal="fade-up">
+          <div class="hero-stat">
+            <span class="hero-stat-number" data-count="700">0</span>
+            <span class="hero-stat-suffix">M+</span>
+            <span class="hero-stat-label">usuarios ChatGPT (2025)</span>
+          </div>
+          <div class="hero-stat-divider" aria-hidden="true"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-number" data-count="76">0</span>
+            <span class="hero-stat-suffix">%</span>
+            <span class="hero-stat-label">devs usan IA</span>
+          </div>
+          <div class="hero-stat-divider" aria-hidden="true"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-number" data-count="65">0</span>
+            <span class="hero-stat-suffix">%</span>
+            <span class="hero-stat-label">empresas adoptan IA</span>
+          </div>
+        </div>
+      </div>
+
+      <!--
+        Scroll indicator: Guía visual sutil para hacer scroll.
+        Animación bounce infinita vía CSS. Se oculta en desktop grande.
+      -->
+      <div class="scroll-indicator" aria-hidden="true">
+        <span class="scroll-indicator-text">Scroll</span>
+        <div class="scroll-indicator-line"></div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      3. SOBRE MÍ
+      ============================================================
+      OBJETIVO UX: Generar confianza y credibilidad técnica.
+      Distribución en grid de 4 cards que cubren:
+      - Presente (backend developer)
+      - Futuro (IA engineer)
+      - Valores (visión crítica)
+      - Enfoque (pensamiento sistémico)
+
+      Patrón: section-header + grid de cards con hover effects.
+      Cada card tiene un ::before gradient que se revela al hover.
+      ============================================================
+    -->
+    <section id="sobre-mi" class="section about-section" aria-label="Sobre mí">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Sobre mí</span>
+          <h2 class="section-title">De backend a <span class="gradient-text">IA engineer</span></h2>
+          <p class="section-subtitle">Mi trayectoria y visión tecnológica</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card" data-reveal="fade-up">
+            <div class="about-card-icon">⚡</div>
+            <h3 class="about-card-title">Backend Developer</h3>
+            <p class="about-card-text">
+              Construyendo sistemas robustos con tecnologías modernas. Bases de datos,
+              APIs, arquitecturas escalables. La base sólida antes de la inteligencia.
+            </p>
+          </div>
+
+          <div class="about-card" data-reveal="fade-up" data-delay="100">
+            <div class="about-card-icon">🧠</div>
+            <h3 class="about-card-title">Futuro IA Engineer</h3>
+            <p class="about-card-text">
+              En evolución constante hacia sistemas inteligentes. Machine learning,
+              procesamiento de lenguaje natural, agentes autónomos. El siguiente paso
+              lógico en mi camino técnico.
+            </p>
+          </div>
+
+          <div class="about-card" data-reveal="fade-up" data-delay="200">
+            <div class="about-card-icon">🔍</div>
+            <h3 class="about-card-title">Visión Crítica</h3>
+            <p class="about-card-text">
+              No creo en el hype. Creo en datos, en medir, en entender qué funciona y qué no.
+              La tecnología bien aplicada transforma. La tecnología mal entendida, no.
+            </p>
+          </div>
+
+          <div class="about-card" data-reveal="fade-up" data-delay="300">
+            <div class="about-card-icon">🌐</div>
+            <h3 class="about-card-title">Pensamiento Sistémico</h3>
+            <p class="about-card-text">
+              No programo líneas, diseño sistemas. Pienso en arquitecturas, en cómo encajan
+              las piezas. En un mundo de IA, pensar será más valioso que memorizar.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      4. IA EN EL DESARROLLO (Datos e Investigación)
+      ============================================================
+      OBJETIVO UX: Demostrar rigor analítico con datos verificables.
+      Es la sección más pesada en contenido — estructurada en:
+      1. Featured stat (76% — hero stat)
+      2. Stats grid (4 cards con variantes positive/negative/neutral)
+      3. Chart de barras (adopción ChatGPT 2023-2025)
+      4. Tabla comparativa por regiones
+
+      DATA SOURCES: Stack Overflow 2024, INE 2025, Funcas 2025, CEPR
+      Todas las fuentes están citadas inline.
+      ============================================================
+    -->
+    <section id="ia-datos" class="section ai-data-section" aria-label="IA en el desarrollo">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Investigación</span>
+          <h2 class="section-title">IA en el <span class="gradient-text">desarrollo real</span></h2>
+          <p class="section-subtitle">Datos concretos sobre adopción y productividad. Sin especulación.</p>
+        </div>
+
+        <!--
+          Featured Stat: Número gigante con contexto.
+          Barra de acento gradient en el borde izquierdo vía ::before.
+        -->
+        <div class="featured-stat" data-reveal="fade-up">
+          <div class="featured-stat-content">
+            <span class="featured-stat-number gradient-text">76%</span>
+            <p class="featured-stat-text">de los desarrolladores <strong>ya usa o planea usar</strong> herramientas de IA en su flujo de trabajo <span class="stat-source">(Stack Overflow, 2024)</span></p>
+          </div>
+        </div>
+
+        <!--
+          Stats Grid: Cards con variantes de cambio (positive/negative/neutral)
+          Cada card tiene: icono, badge de cambio, número animado, label, comparativa
+          Las variantes de color indican si el cambio es positivo (verde), negativo (rojo) o neutro
+        -->
+        <div class="stats-grid">
+          <div class="stat-card" data-reveal="fade-up">
+            <div class="stat-card-header">
+              <span class="stat-card-icon">📊</span>
+              <span class="stat-card-change positive">+14%</span>
+            </div>
+            <div class="stat-card-value">
+              <span class="stat-number" data-count="62">0</span><span class="stat-suffix">%</span>
+            </div>
+            <p class="stat-card-label">Desarrolladores profesionales usando IA (2024)</p>
+            <p class="stat-card-compare">vs 44% en 2023 <span class="trend up">↑</span></p>
+          </div>
+
+          <div class="stat-card" data-reveal="fade-up" data-delay="100">
+            <div class="stat-card-header">
+              <span class="stat-card-icon">⚠️</span>
+              <span class="stat-card-change negative">-57%</span>
+            </div>
+            <div class="stat-card-value">
+              <span class="stat-number" data-count="43">0</span><span class="stat-suffix">%</span>
+            </div>
+            <p class="stat-card-label">Devs que confían en la precisión de la IA</p>
+            <p class="stat-card-compare">El 57% NO confía ciegamente <span class="trend down">↓</span></p>
+          </div>
+
+          <div class="stat-card" data-reveal="fade-up" data-delay="200">
+            <div class="stat-card-header">
+              <span class="stat-card-icon">🏢</span>
+              <span class="stat-card-change positive">+34%</span>
+            </div>
+            <div class="stat-card-value">
+              <span class="stat-number" data-count="77">0</span><span class="stat-suffix">%</span>
+            </div>
+            <p class="stat-card-label">Empresas españolas con mejora de productividad</p>
+            <p class="stat-card-compare">vs 43% promedio europeo <span class="trend up">↑</span></p>
+          </div>
+
+          <div class="stat-card" data-reveal="fade-up" data-delay="300">
+            <div class="stat-card-header">
+              <span class="stat-card-icon">🌍</span>
+              <span class="stat-card-change neutral">±0%</span>
+            </div>
+            <div class="stat-card-value">
+              <span class="stat-number" data-count="4">0</span><span class="stat-suffix">%</span>
+            </div>
+            <p class="stat-card-label">Ganancia productividad laboral UE (CEPR)</p>
+            <p class="stat-card-compare">Modesto, pero real <span class="trend neutral">→</span></p>
+          </div>
+        </div>
+
+        <!--
+          Chart de Barras: Adopción ChatGPT en España 2023-2025
+          - Las barras inician en height:4% y animan al valor real al entrar en viewport
+          - data-value almacena el porcentaje objetivo para JS
+          - transition: height 1.5s cubic-bezier para la animación
+          - Valores: 4% (2023) → 14% (2024) → 28% (2025)
+          - Fuente: Funcas 2025
+        -->
+        <div class="chart-section" data-reveal="fade-up">
+          <h3 class="chart-title">Adopción de ChatGPT en España (2023–2025)</h3>
+          <div class="chart-container">
+            <div class="chart-bar-group">
+              <div class="chart-bar-wrapper">
+                <div class="chart-bar" data-value="4" style="height: 4%">
+                  <span class="chart-bar-value">4%</span>
+                </div>
+              </div>
+              <span class="chart-bar-label">2023</span>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar-wrapper">
+                <div class="chart-bar" data-value="14" style="height: 14%">
+                  <span class="chart-bar-value">14%</span>
+                </div>
+              </div>
+              <span class="chart-bar-label">2024</span>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar-wrapper">
+                <div class="chart-bar" data-value="28" style="height: 28%">
+                  <span class="chart-bar-value">28%</span>
+                </div>
+              </div>
+              <span class="chart-bar-label">2025</span>
+            </div>
+          </div>
+          <p class="chart-caption">Uso frecuente de ChatGPT en España. Fuente: Funcas 2025</p>
+        </div>
+
+        <!--
+          Tabla Comparativa: Adopción de IA por región
+          - Tabla con estilos modernos (bordes redondeados, hover rows)
+          - Wrapper con overflow-x: auto para scroll horizontal en mobile
+          - Flags para identificación visual rápida de países
+          - Muestra la brecha entre países avanzados (>40%) y emergentes (16%)
+        -->
+        <div class="table-section" data-reveal="fade-up">
+          <h3 class="chart-title">Adopción de IA por región</h3>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Región</th>
+                  <th>Uso IA Generativa</th>
+                  <th>Conocimiento IA</th>
+                  <th>Confianza</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="flag">🇪🇸</span> España</td>
+                  <td><strong>37.9%</strong> <span class="table-source">(INE 2025)</span></td>
+                  <td>44% poco/nulo</td>
+                  <td>51% entusiasmo</td>
+                </tr>
+                <tr>
+                  <td><span class="flag">🇳🇴</span> Noruega</td>
+                  <td><strong>&gt;40%</strong></td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><span class="flag">🇫🇷</span> Francia</td>
+                  <td><strong>&gt;40%</strong></td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><span class="flag">🇷🇴</span> Rumanía</td>
+                  <td><strong>16%</strong></td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><span class="flag">🌍</span> Global</td>
+                  <td><strong>~20%</strong> humanidad</td>
+                  <td>66% usa regularmente</td>
+                  <td>55% confianza &gt; riesgo</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      5. PRODUCTIVIDAD REAL VS HUMO
+      ============================================================
+      OBJETIVO UX: Separar la realidad del hype mediático.
+      Dos columnas enfrentadas (real vs hype) con la misma estructura:
+      - Header con ícono ✅/❌
+      - Lista de items con descripciones técnicas
+      - La card "real" tiene borde verde, "hype" tiene borde rojo
+
+      Insight Box: Destaca un hallazgo clave (Paradoja de Harvard)
+      con acento cyan para diferenciarlo del contenido principal.
+      ============================================================
+    -->
+    <section id="productividad" class="section productivity-section" aria-label="Productividad real vs humo">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Análisis crítico</span>
+          <h2 class="section-title">Productividad real <span class="gradient-text">vs hype</span></h2>
+          <p class="section-subtitle">Separamos la realidad del marketing. ¿Qué está pasando realmente?</p>
+        </div>
+
+        <div class="comparison-grid">
+          <!-- Columna: LO QUE SÍ HACE LA IA (verde) -->
+          <div class="comparison-card real" data-reveal="fade-up">
+            <div class="comparison-card-header">
+              <span class="comparison-icon">✅</span>
+              <h3>Lo que SÍ hace la IA</h3>
+            </div>
+            <ul class="comparison-list">
+              <li>
+                <span class="check">◆</span>
+                <div>
+                  <strong>Automatización de boilerplate</strong>
+                  <p>Generación de código repetitivo, tests unitarios, documentación básica</p>
+                </div>
+              </li>
+              <li>
+                <span class="check">◆</span>
+                <div>
+                  <strong>Asistencia en debugging</strong>
+                  <p>Identificación de patrones de error, sugerencias de corrección</p>
+                </div>
+              </li>
+              <li>
+                <span class="check">◆</span>
+                <div>
+                  <strong>Generación de APIs</strong>
+                  <p>Creación rápida de endpoints, schemas, validaciones básicas</p>
+                </div>
+              </li>
+              <li>
+                <span class="check">◆</span>
+                <div>
+                  <strong>Análisis de datos</strong>
+                  <p>Procesamiento, resumen y extracción de insights de grandes volúmenes</p>
+                </div>
+              </li>
+              <li>
+                <span class="check">◆</span>
+                <div>
+                  <strong>Traducción código-lenguaje natural</strong>
+                  <p>Explicar código legacy, documentar, traducir entre lenguajes</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Columna: LO QUE LA IA NO HACE (rojo) -->
+          <div class="comparison-card hype" data-reveal="fade-up" data-delay="200">
+            <div class="comparison-card-header">
+              <span class="comparison-icon">❌</span>
+              <h3>Lo que la IA NO hace</h3>
+            </div>
+            <ul class="comparison-list">
+              <li>
+                <span class="cross">✕</span>
+                <div>
+                  <strong>Arquitectura de sistemas complejos</strong>
+                  <p>No diseña arquitecturas escalables ni toma decisiones de diseño fundamentales</p>
+                </div>
+              </li>
+              <li>
+                <span class="cross">✕</span>
+                <div>
+                  <strong>Pensamiento crítico real</strong>
+                  <p>No entiende contexto de negocio, trade-offs, ni implicaciones a largo plazo</p>
+                </div>
+              </li>
+              <li>
+                <span class="cross">✕</span>
+                <div>
+                  <strong>Código seguro por defecto</strong>
+                  <p>Genera vulnerabilidades si no se supervisa. No entiende seguridad</p>
+                </div>
+              </li>
+              <li>
+                <span class="cross">✕</span>
+                <div>
+                  <strong>Innovación genuina</strong>
+                  <p>Remixa conocimiento existente. No crea paradigmas nuevos</p>
+                </div>
+              </li>
+              <li>
+                <span class="cross">✕</span>
+                <div>
+                  <strong>Reemplazar al desarrollador senior</strong>
+                  <p>El 45% dice que no maneja tareas complejas. Es herramienta, no reemplazo</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!--
+          Insight Box: Destaca la paradoja de productividad.
+          Estilo diferenciado con borde cyan y background sutil.
+          Cita fuente académica (Harvard Business School).
+        -->
+        <div class="insight-box" data-reveal="fade-up">
+          <div class="insight-icon">💡</div>
+          <div class="insight-content">
+            <h4>La paradoja de la productividad</h4>
+            <p>Un estudio de Harvard encontró que en experimentos controlados, <strong>el uso general de IA no aceleró los tiempos de respuesta</strong> — incluso los alargó un 19% en algunos casos. La clave: los beneficios reales aparecen cuando el desarrollador <strong>ya sabe lo que está haciendo</strong>. La IA amplifica habilidad, no la reemplaza.</p>
+            <span class="insight-source">Fuente: Harvard Business School, estudio controlado 2024</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      6. LO QUE LA GENTE NO ENTIENDE
+      ============================================================
+      OBJETIVO UX: Crear conciencia sobre la brecha de conocimiento.
+      Cards numeradas (01-04) con datos duros sobre:
+      - Falta de conocimiento general (44% poco/nulo)
+      - Uso superficial (solo 14% uso diario)
+      - Mala calidad de prompts
+      - Confianza mal colocada
+
+      Big Stat final: 80% a favor de educación en IA — cierra con
+      un mensaje esperanzador y concreto.
+      ============================================================
+    -->
+    <section id="no-entienden" class="section misunderstanding-section" aria-label="Lo que la gente no entiende">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Perspectiva</span>
+          <h2 class="section-title">Lo que la gente <span class="gradient-text">no entiende</span></h2>
+          <p class="section-subtitle">La brecha entre la percepción pública y la realidad técnica</p>
+        </div>
+
+        <div class="misunderstanding-grid">
+          <div class="misunderstanding-card" data-reveal="fade-up">
+            <div class="misunderstanding-number">01</div>
+            <h3>La mayoría usa mal la IA</h3>
+            <p>El 44% de la población española reconoce tener poco o ningún conocimiento sobre IA. El 15% ni siquiera conoce ChatGPT. El problema no es la herramienta, es <strong>la falta de educación digital</strong>.</p>
+            <span class="misunderstanding-source">Fuente: Funcas, INE 2025</span>
+          </div>
+
+          <div class="misunderstanding-card" data-reveal="fade-up" data-delay="100">
+            <div class="misunderstanding-number">02</div>
+            <h3>Uso superficial generalizado</h3>
+            <p>Solo el 14% de los españoles usa ChatGPT a diario. El 21% nunca ha usado ninguna herramienta de IA. El resto la usa de forma esporádica y superficial. <strong>No hay adopción real, hay experimentación</strong>.</p>
+            <span class="misunderstanding-source">Fuente: Funcas 2025</span>
+          </div>
+
+          <div class="misunderstanding-card" data-reveal="fade-up" data-delay="200">
+            <div class="misunderstanding-number">03</div>
+            <h3>Incapacidad de formular contexto</h3>
+            <p>La calidad del output de la IA depende directamente de la calidad del input. La mayoría no sabe <strong>formular prompts efectivos</strong>, no entiende el contexto que necesita proporcionar, y por eso obtiene resultados mediocres.</p>
+            <span class="misunderstanding-source">Diferencia clave: usuario promedio vs usuario avanzado</span>
+          </div>
+
+          <div class="misunderstanding-card" data-reveal="fade-up" data-delay="300">
+            <div class="misunderstanding-number">04</div>
+            <h3>Confianza mal colocada</h3>
+            <p>Solo el 43% de los desarrolladores confía en la precisión de la IA. Y sin embargo, vemos gente tomando decisiones basadas en respuestas de ChatGPT sin verificar. <strong>La IA alucina. Y mucho.</strong></p>
+            <span class="misunderstanding-source">Fuente: Stack Overflow Survey 2024</span>
+          </div>
+        </div>
+
+        <!-- Big stat: Llamado a la acción educativa -->
+        <div class="big-stat" data-reveal="fade-up">
+          <div class="big-stat-number"><span data-count="80">0</span>%</div>
+          <p class="big-stat-text">de los españoles apoya <strong>dedicar más horas escolares</strong> a educación en IA. La conciencia está, la formación no.</p>
+          <span class="big-stat-source">Fuente: Funcas 2025</span>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      7. IA Y PROGRAMACIÓN
+      ============================================================
+      OBJETIVO UX: Mostrar cómo cambia el rol del desarrollador.
+      6 cards en grid que cubren:
+      - Evolución del rol (escribir → diseñar)
+      - Productividad real (+24%)
+      - Debugging asistido
+      - Arquitecturas modernas
+      - Pensamiento sistémico
+      - Nuevas habilidades
+
+      Tono: optimista pero realista — la IA transforma, no elimina.
+      ============================================================
+    -->
+    <section id="ia-programacion" class="section coding-section" aria-label="IA y programación">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Transformación</span>
+          <h2 class="section-title">IA y <span class="gradient-text">programación</span></h2>
+          <p class="section-subtitle">Cómo cambia el rol del desarrollador en la era de la inteligencia artificial</p>
+        </div>
+
+        <div class="coding-grid">
+          <div class="coding-item" data-reveal="fade-up">
+            <div class="coding-icon">🔄</div>
+            <h3>El rol evoluciona</h3>
+            <p>El desarrollador pasa de escribir código a <strong>diseñar sistemas</strong>. La IA se encarga de la implementación, tú de la arquitectura y las decisiones fundamentales.</p>
+          </div>
+
+          <div class="coding-item" data-reveal="fade-up" data-delay="100">
+            <div class="coding-icon">🚀</div>
+            <h3>Productividad real</h3>
+            <p>Desarrolladores con experiencia en IA reportan ser ~24% más rápidos. Pero esto solo aplica cuando <strong>ya saben lo que hacen</strong>. La IA acelera, no enseña.</p>
+          </div>
+
+          <div class="coding-item" data-reveal="fade-up" data-delay="200">
+            <div class="coding-icon">🐛</div>
+            <h3>Debugging asistido</h3>
+            <p>La IA identifica patrones de error y sugiere correcciones, pero <strong>no entiende la lógica de negocio</strong>. El debugging profundo sigue siendo humano.</p>
+          </div>
+
+          <div class="coding-item" data-reveal="fade-up" data-delay="300">
+            <div class="coding-icon">🏗️</div>
+            <h3>Arquitecturas modernas</h3>
+            <p>La IA generativa acelera la creación de APIs, microservicios y schemas. Pero <strong>el diseño arquitectónico</strong> —cómo encajan las piezas— sigue siendo trabajo del ingeniero.</p>
+          </div>
+
+          <div class="coding-item" data-reveal="fade-up" data-delay="400">
+            <div class="coding-icon">🧠</div>
+            <h3>Pensamiento sistémico</h3>
+            <p>En un mundo donde la IA escribe código, <strong>pensar será más valioso que memorizar</strong>. Comprender sistemas, no lenguajes. Diseñar, no transcribir.</p>
+          </div>
+
+          <div class="coding-item" data-reveal="fade-up" data-delay="500">
+            <div class="coding-icon">📈</div>
+            <h3>Nuevas habilidades</h3>
+            <p>Prompt engineering, evaluación de outputs, integración de modelos, fine-tuning. El stack del desarrollador se expande. <strong>Adaptarse no es opcional</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      8. RIESGOS Y CONTRAS
+      ============================================================
+      OBJETIVO UX: Mostrar madurez analítica reconociendo los riesgos.
+      8 cards cubriendo: alucinaciones, dependencia, pensamiento crítico,
+      problemas legales, desinformación, seguridad, automatización laboral,
+      desigualdad. Sin censura, con datos.
+      ============================================================
+    -->
+    <section id="riesgos" class="section risks-section" aria-label="Riesgos y contras">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Advertencia</span>
+          <h2 class="section-title">Riesgos y <span class="gradient-text">contras</span></h2>
+          <p class="section-subtitle">No todo es progreso. La IA tiene un lado oscuro que hay que conocer.</p>
+        </div>
+
+        <div class="risks-grid">
+          <div class="risk-card" data-reveal="fade-up">
+            <div class="risk-icon">🎭</div>
+            <h3>Alucinaciones</h3>
+            <p>La IA genera información falsa con total confianza. El 45% de desarrolladores reporta soluciones imprecisas en tareas complejas. Verificar siempre.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="100">
+            <div class="risk-icon">🔗</div>
+            <h3>Dependencia excesiva</h3>
+            <p>Si delegas demasiado en IA, <strong>atrofias tu criterio técnico</strong>. La comodidad de tener respuestas instantáneas reduce tu capacidad de resolver problemas.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="200">
+            <div class="risk-icon">🧠</div>
+            <h3>Pérdida de pensamiento crítico</h3>
+            <p>Aceptar respuestas sin cuestionarlas es el mayor peligro. La IA no "piensa", predice. <strong>Confundir predicción con razonamiento</strong> es un error fundamental.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="300">
+            <div class="risk-icon">⚖️</div>
+            <h3>Problemas legales</h3>
+            <p>Copyright, licencias de código generado, responsabilidad por outputs. El marco legal <strong>aún no está preparado</strong> para la velocidad de la IA.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="400">
+            <div class="risk-icon">📰</div>
+            <h3>Desinformación</h3>
+            <p>La IA generativa puede producir contenido falso difícil de detectar. Deepfakes, noticias falsas, manipulación. <strong>La verdad se vuelve más cara</strong>.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="500">
+            <div class="risk-icon">🔒</div>
+            <h3>Seguridad</h3>
+            <p>La IA genera código con vulnerabilidades si no se supervisa. Inyección SQL, XSS, malas prácticas. <strong>Nunca deployes código IA sin revisión humana</strong>.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="600">
+            <div class="risk-icon">💼</div>
+            <h3>Automatización laboral</h3>
+            <p>El 36% de la población mundial teme perder su empleo por IA. Roles de entrada en programación, diseño y redacción <strong>ya están siendo afectados</strong>.</p>
+          </div>
+
+          <div class="risk-card" data-reveal="fade-up" data-delay="700">
+            <div class="risk-icon">📉</div>
+            <h3>Brecha de desigualdad</h3>
+            <p>La IA concentra beneficios en grandes empresas y trabajadores cualificados. El +4% de productividad promedio UE esconde <strong>brechas enormes</strong> entre países y sectores.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      9. MITOS DE LA IA (Q&A)
+      ============================================================
+      OBJETIVO UX: Desmentir mitos comunes con análisis técnico.
+      Cards con formato Q&A: pregunta en negrita, respuesta argumentada.
+      Cada myth-card tiene: icono, pregunta, divisor, respuesta.
+      Tono: directo, sin rodeos, con fundamento técnico.
+      ============================================================
+    -->
+    <section id="mitos" class="section myths-section" aria-label="Mitos de la IA">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Desmentidos</span>
+          <h2 class="section-title">Mitos de la <span class="gradient-text">IA</span></h2>
+          <p class="section-subtitle">Lo que internet repite y la realidad técnica dice</p>
+        </div>
+
+        <div class="myths-list">
+          <div class="myth-card" data-reveal="fade-up">
+            <div class="myth-q">
+              <span class="myth-icon">🤖</span>
+              <h3>"La IA reemplazará a todos los programadores"</h3>
+            </div>
+            <div class="myth-divider"></div>
+            <div class="myth-a">
+              <p>Falso. La IA automatiza tareas repetitivas, pero <strong>el diseño de sistemas, la arquitectura, la comprensión de negocio y el pensamiento crítico</strong> siguen siendo humanos. Los programadores que usan IA serán más productivos. Los que no, quedarán atrás. Pero "reemplazar" es una simplificación absurda.</p>
+            </div>
+          </div>
+
+          <div class="myth-card" data-reveal="fade-up" data-delay="100">
+            <div class="myth-q">
+              <span class="myth-icon">🧠</span>
+              <h3>"La IA piensa"</h3>
+            </div>
+            <div class="myth-divider"></div>
+            <div class="myth-a">
+              <p>No. Los modelos de lenguaje <strong>predicen la siguiente palabra</strong> basándose en patrones estadísticos. No hay conciencia, no hay razonamiento, no hay comprensión. Es matemática, no magia. Llamar "pensamiento" a la predicción de tokens es un error conceptual grave.</p>
+            </div>
+          </div>
+
+          <div class="myth-card" data-reveal="fade-up" data-delay="200">
+            <div class="myth-q">
+              <span class="myth-icon">🌌</span>
+              <h3>"La IA ya es AGI"</h3>
+            </div>
+            <div class="myth-divider"></div>
+            <div class="myth-a">
+              <p>Ni cerca. La AGI (Inteligencia General Artificial) implicaría <strong>comprensión, adaptabilidad y autonomía real</strong>. Los modelos actuales son impresionantes en dominios específicos pero fallan estrepitosamente en razonamiento básico, sentido común y tareas que requieren entendimiento real del mundo.</p>
+            </div>
+          </div>
+
+          <div class="myth-card" data-reveal="fade-up" data-delay="300">
+            <div class="myth-q">
+              <span class="myth-icon">💬</span>
+              <h3>"Saber pedir prompts ya es una profesión"</h3>
+            </div>
+            <div class="myth-divider"></div>
+            <div class="myth-a">
+              <p>El "prompt engineering" como profesión independiente es <strong>una moda pasajera</strong>. A medida que los modelos mejoran, los prompts se vuelven más intuitivos. La habilidad real no es pedir bien, sino <strong>saber qué pedir</strong>. Eso requiere conocimiento del dominio, no técnica de prompting.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      10. OPINIONES DE REFERENTES
+      ============================================================
+      OBJETIVO UX: Añadir autoridad al contenido con voces reales.
+      5 cards con líderes tecnológicos: Sam Altman, Jensen Huang,
+      Satya Nadella, Elon Musk, Geoffrey Hinton.
+      Cada card: avatar gradient, nombre, rol, cita textual.
+      La card de Hinton es más ancha (leader-card-wide) por ser
+      la figura más relevante académicamente.
+      ============================================================
+    -->
+    <section id="referentes" class="section leaders-section" aria-label="Opiniones de referentes">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Voces autorizadas</span>
+          <h2 class="section-title">Lo que dicen los <span class="gradient-text">líderes</span></h2>
+          <p class="section-subtitle">Perspectivas de quienes están moldeando la industria</p>
+        </div>
+
+        <div class="leaders-grid">
+          <div class="leader-card" data-reveal="fade-up">
+            <div class="leader-avatar" style="background: linear-gradient(135deg, #10b981, #059669)">
+              <span>SA</span>
+            </div>
+            <h3 class="leader-name">Sam Altman</h3>
+            <span class="leader-role">CEO · OpenAI</span>
+            <blockquote class="leader-quote">
+              "La IA será la tecnología más transformadora en la historia humana. Pero necesitamos acertar con la seguridad y la distribución de sus beneficios."
+            </blockquote>
+          </div>
+
+          <div class="leader-card" data-reveal="fade-up" data-delay="100">
+            <div class="leader-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706)">
+              <span>JH</span>
+            </div>
+            <h3 class="leader-name">Jensen Huang</h3>
+            <span class="leader-role">CEO · NVIDIA</span>
+            <blockquote class="leader-quote">
+              "No estamos haciendo chips. Estamos construyendo la infraestructura para la próxima revolución industrial. La IA es la nueva electricidad."
+            </blockquote>
+          </div>
+
+          <div class="leader-card" data-reveal="fade-up" data-delay="200">
+            <div class="leader-avatar" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8)">
+              <span>SN</span>
+            </div>
+            <h3 class="leader-name">Satya Nadella</h3>
+            <span class="leader-role">CEO · Microsoft</span>
+            <blockquote class="leader-quote">
+              "La IA va a redefinir cómo trabajamos. No se trata de reemplazar personas, sino de empoderarlas para que hagan cosas que antes eran imposibles."
+            </blockquote>
+          </div>
+
+          <div class="leader-card" data-reveal="fade-up" data-delay="300">
+            <div class="leader-avatar" style="background: linear-gradient(135deg, #ef4444, #dc2626)">
+              <span>EM</span>
+            </div>
+            <h3 class="leader-name">Elon Musk</h3>
+            <span class="leader-role">CEO · Tesla, xAI, SpaceX</span>
+            <blockquote class="leader-quote">
+              "La IA es potencialmente más peligrosa que las armas nucleares. Necesitamos regulación proactiva, no reactiva. El ritmo de avance es aterrador."
+            </blockquote>
+          </div>
+
+          <!--
+            Card wide: Geoffrey Hinton, el "Padrino del Deep Learning".
+            Ocupa todo el ancho del grid (grid-column: 1 / -1)
+            por la relevancia y extensión de su cita.
+          -->
+          <div class="leader-card leader-card-wide" data-reveal="fade-up" data-delay="400">
+            <div class="leader-avatar" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9)">
+              <span>GH</span>
+            </div>
+            <h3 class="leader-name">Geoffrey Hinton</h3>
+            <span class="leader-role">Padrino del Deep Learning · Premio Turing</span>
+            <blockquote class="leader-quote">
+              "Estoy preocupado. No porque la IA sea consciente, sino porque será mejor que nosotros en muchas tareas. Y no sabemos cómo controlar algo más inteligente que nosotros. Dejé Google para poder hablar libremente sobre estos riesgos."
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      11. TIMELINE EVOLUCIÓN IA
+      ============================================================
+      OBJETIVO UX: Contextualizar la evolución de la IA.
+      Timeline vertical con 7 hitos clave desde 1950 hasta 2025.
+      Cada item tiene: dot indicador, año, título, descripción.
+      La línea vertical se anima con scaleY(0→1) al hacer scroll.
+      Los dots se activan secuencialmente vía JS.
+      ============================================================
+    -->
+    <section id="timeline" class="section timeline-section" aria-label="Evolución de la IA">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Historia</span>
+          <h2 class="section-title">Evolución de la <span class="gradient-text">IA</span></h2>
+          <p class="section-subtitle">De las redes neuronales a los agentes autónomos</p>
+        </div>
+
+        <div class="timeline" data-reveal="fade-up">
+          <!-- Track base (gris) y track animado (gradient) via ::before -->
+          <div class="timeline-track" aria-hidden="true"></div>
+
+          <!-- Hito 1: 1950 — Alan Turing -->
+          <div class="timeline-item active" data-year="1950">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">1950</span>
+              <h3>Alan Turing y la prueba</h3>
+              <p>Turing publica "Computing Machinery and Intelligence" y propone el Test de Turing. Nace la pregunta: ¿pueden las máquinas pensar?</p>
+            </div>
+          </div>
+
+          <!-- Hito 2: 2012 — Deep Learning -->
+          <div class="timeline-item" data-year="2012">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">2012</span>
+              <h3>Deep Learning</h3>
+              <p>AlexNet gana ImageNet con redes convolucionales profundas. El deep learning demuestra su potencial y cambia para siempre la visión por computadora.</p>
+            </div>
+          </div>
+
+          <!-- Hito 3: 2017 — Transformers -->
+          <div class="timeline-item" data-year="2017">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">2017</span>
+              <h3>Transformers</h3>
+              <p>Google publica "Attention Is All You Need". La arquitectura Transformer revoluciona el NLP y se convierte en la base de todo lo que vino después.</p>
+            </div>
+          </div>
+
+          <!-- Hito 4: 2020 — GPT-3 -->
+          <div class="timeline-item" data-year="2020">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">2020</span>
+              <h3>GPT-3</h3>
+              <p>OpenAI lanza GPT-3 con 175B parámetros. El mundo descubre lo que un modelo de lenguaje puede hacer. Comienza la era de la IA generativa.</p>
+            </div>
+          </div>
+
+          <!-- Hito 5: 2022 — ChatGPT -->
+          <div class="timeline-item" data-year="2022">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">2022</span>
+              <h3>ChatGPT</h3>
+              <p>Lanzamiento de ChatGPT. 100M de usuarios en 2 meses. La IA generativa llega al público masivo y cambia la percepción global de la tecnología.</p>
+            </div>
+          </div>
+
+          <!-- Hito 6: 2024 — IA Multimodal -->
+          <div class="timeline-item" data-year="2024">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">2024</span>
+              <h3>IA Multimodal</h3>
+              <p>GPT-4V, Gemini, Claude 3. Los modelos procesan texto, imágenes, audio y video. La multimodalidad es el nuevo estándar.</p>
+            </div>
+          </div>
+
+          <!-- Hito 7: 2025 — Agentes IA -->
+          <div class="timeline-item" data-year="2025">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="timeline-year">2025</span>
+              <h3>Agentes IA</h3>
+              <p>Los agentes autónomos ejecutan tareas complejas de principio a fin. La frontera se mueve: de generar a actuar. El siguiente salto evolutivo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      12. IA Y SOCIEDAD
+      ============================================================
+      OBJETIVO UX: Ampliar la mirada más allá del código.
+      6 cards sobre impacto social: educación, trabajo, productividad,
+      brecha tecnológica, desigualdad, automatización.
+      Tono: reflexivo, con datos, sin alarmismo.
+      ============================================================
+    -->
+    <section id="sociedad" class="section society-section" aria-label="IA y sociedad">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Reflexión</span>
+          <h2 class="section-title">IA y <span class="gradient-text">sociedad</span></h2>
+          <p class="section-subtitle">El impacto más allá de la tecnología</p>
+        </div>
+
+        <div class="society-grid">
+          <div class="society-card" data-reveal="fade-up">
+            <div class="society-icon">🎓</div>
+            <h3>Educación</h3>
+            <p>El 80% de los españoles apoya más horas de IA en escuelas. Pero el sistema educativo <strong>no está preparado</strong> para integrar esta enseñanza. La brecha empieza en las aulas.</p>
+          </div>
+
+          <div class="society-card" data-reveal="fade-up" data-delay="100">
+            <div class="society-icon">💼</div>
+            <h3>Trabajo</h3>
+            <p>El 60% de la población mundial cree que la IA cambiará su trabajo en 5 años. Solo el 36% teme perderlo. <strong>El optimismo predomina</strong>, pero la transformación será real.</p>
+          </div>
+
+          <div class="society-card" data-reveal="fade-up" data-delay="200">
+            <div class="society-icon">📈</div>
+            <h3>Productividad humana</h3>
+            <p>+4% de ganancia promedio en UE (CEPR). Pero este número esconde realidades muy distintas: <strong>grandes empresas vs pequeñas, países ricos vs emergentes</strong>.</p>
+          </div>
+
+          <div class="society-card" data-reveal="fade-up" data-delay="300">
+            <div class="society-icon">📡</div>
+            <h3>Brecha tecnológica</h3>
+            <p>En España el 45% usa IA. En Rumanía el 16%. La brecha no es solo digital, es <strong>económica, educativa y generacional</strong>. La IA puede ampliar la desigualdad.</p>
+          </div>
+
+          <div class="society-card" data-reveal="fade-up" data-delay="400">
+            <div class="society-icon">⚖️</div>
+            <h3>Desigualdad</h3>
+            <p>Los salarios en ocupaciones IA-especializadas son hasta un 25% mayores (PwC). La IA <strong>concentra riqueza</strong> en quienes la controlan y entienden.</p>
+          </div>
+
+          <div class="society-card" data-reveal="fade-up" data-delay="500">
+            <div class="society-icon">🤖</div>
+            <h3>Automatización</h3>
+            <p>No todos los sectores se automatizan igual. Marketing gana +73% con IA. Taxistas: impacto "casi nulo". <strong>El efecto es desigual</strong> y depende del tipo de trabajo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      ============================================================
+      13. TERMINAL INTERACTIVA
+      ============================================================
+      OBJETIVO UX: Elemento interactivo que muestra personalidad
+      técnica y permite explorar el perfil del desarrollador.
+
+      ARQUITECTURA:
+      - Terminal falsa con diseño macOS (dots rojo/amarillo/verde)
+      - Input real para capturar comandos
+      - 12 comandos disponibles: help, about, skills, roadmap, etc.
+      - Output con HTML parseado para formato rich
+      - Estilo green-on-black clásico con prompt kevin@dev:~$
+      - Scroll automático al último output
+
+      ESTADOS:
+      - Normal: input habilitado, welcome message
+      - Comando no encontrado: output rojo (error)
+      - clear: limpia el body, mantiene el input habilitado
+      - exit: deshabilita el input permanentemente
+      ============================================================
+    -->
+    <section id="terminal" class="section terminal-section" aria-label="Terminal interactiva">
+      <div class="container">
+        <div class="section-header" data-reveal="fade-up">
+          <span class="section-tag">// Interactivo</span>
+          <h2 class="section-title">Terminal <span class="gradient-text">dev</span></h2>
+          <p class="section-subtitle">Escribe comandos para explorar mi perfil técnico</p>
+        </div>
+
+        <!--
+          Terminal: Click en cualquier parte hace focus al input.
+          La estructura simula una ventana de terminal real.
+        -->
+        <div class="terminal" data-reveal="fade-up">
+          <!--
+            Header: Bots de colores macOS + título.
+            No funcional, puramente estético.
+          -->
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+            </div>
+            <span class="terminal-title">kevin@dev:~$</span>
+          </div>
+
+          <!--
+            Body: Contenedor de output con scroll.
+            El welcome message es el estado inicial.
+          -->
+          <div class="terminal-body" id="terminalBody">
+            <div class="terminal-line">
+              <span class="terminal-prompt">kevin@dev:~$</span>
+              <span class="terminal-welcome">Bienvenido a mi terminal interactiva. Escribe <strong>help</strong> para ver comandos disponibles.</span>
+            </div>
+          </div>
+
+          <!--
+            Input line: Prompt + input field.
+            El cursor ▊ parpadea vía CSS (misma animación blink que hero typing).
+            autocomplete="off" y spellcheck="false" para experiencia terminal real.
+          -->
+          <div class="terminal-input-line">
+            <span class="terminal-prompt">kevin@dev:~$</span>
+            <div class="terminal-input-wrapper">
+              <input type="text" class="terminal-input" id="terminalInput" placeholder="Escribe un comando..." autofocus spellcheck="false" autocomplete="off">
+              <span class="terminal-cursor-line" aria-hidden="true">▊</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!--
+    ============================================================
+    14. FOOTER
+    ============================================================
+    OBJETIVO UX: Cierre limpio y profesional, tipo Linear/Stripe.
+    - Logo + tagline
+    - Navegación secundaria
+    - Copyright con heart ◆
+    - Social links (GitHub, LinkedIn, X/Twitter) con SVGs inline
+    ============================================================
+  -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="footer-logo">◆ Kevin<span class="footer-accent">Dev</span></span>
+        <p class="footer-tagline">Backend · IA · Visión tecnológica crítica</p>
+      </div>
+
+      <!-- Navegación secundaria del footer -->
+      <nav class="footer-nav" aria-label="Navegación secundaria">
+        <a href="#inicio">Inicio</a>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#ia-datos">Investigación</a>
+        <a href="#mitos">Mitos</a>
+        <a href="#terminal">Terminal</a>
+      </nav>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Kevin Dev. Creado con <span class="footer-heart">◆</span> y datos reales.</p>
+        <!-- Social links: SVGs inline para evitar requests extra -->
+        <div class="footer-links">
+          <a href="#" aria-label="GitHub" class="footer-social">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="footer-social">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" aria-label="Twitter/X" class="footer-social">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script: Carga al final para no bloquear render -->
+  <script src="script.js"></script>
+</body>
+</html>
